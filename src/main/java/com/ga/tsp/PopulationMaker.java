@@ -2,15 +2,14 @@ package com.ga.tsp;
 
 // testing animesh 2
 
-import java.util.*;
-import java.util.Map.Entry;
-
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.Path;
-
 import scala.util.Random;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 public class PopulationMaker {
 
@@ -27,14 +26,15 @@ public class PopulationMaker {
 
     public TreeMap <Double, ArrayList <Path>> generate(int numberOfOrganisms) {
 
-        TreeMap <Double, ArrayList <Path>> population = new TreeMap<Double, ArrayList <Path>>();
+        TreeMap <Double, ArrayList <Path>> populationMap = new TreeMap<Double, ArrayList <Path>>();
+
 
         for (int i = 0; i < numberOfOrganisms; i++){
             Path currentPath = getValidPath();
 
             Double currentPathWeight = new Double(currentPath.getPathWeight("weight"));
 
-            ArrayList <Path> currentPathArray = population.get(currentPathWeight);
+            ArrayList <Path> currentPathArray = populationMap.get(currentPathWeight);
 
             if(currentPathArray != null){
                 // Weight is already present in LinkedHashMap and add this Path to the respective array list.
@@ -52,11 +52,11 @@ public class PopulationMaker {
                 // This weight has never been seen before so make a new key and array list to add to the LinkedHashMap.
                 currentPathArray=new ArrayList <Path>();
                 currentPathArray.add(currentPath);
-                population.put(currentPathWeight, currentPathArray);
+                populationMap.put(currentPathWeight, currentPathArray);
             }
         }
 
-        return population;
+        return populationMap;
 
 
 

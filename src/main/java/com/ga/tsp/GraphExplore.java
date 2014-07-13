@@ -95,14 +95,14 @@ public class GraphExplore {
     }
 
 
-    private static void addAllEdgeInstances (Graph graph, boolean isDirected){ //run this function s
+    private static void addAllEdgeInstances (Graph graph, boolean isDirected){
         Collection<Node> noteSet = graph.getNodeSet();
 
         for (Iterator iterator = noteSet.iterator(); iterator.hasNext();) {
             Node startNode = (Node) iterator.next();
 
             for (Iterator<Node> iterator2 = noteSet.iterator(); iterator2.hasNext();) {
-                Node endNode = (Node) iterator2.next();
+                Node endNode = iterator2.next();
 
                 if (!(startNode == endNode)){
                     graph.addEdge(startNode.toString().concat(endNode.toString()), startNode, endNode, isDirected);

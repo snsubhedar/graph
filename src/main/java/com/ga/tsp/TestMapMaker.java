@@ -6,19 +6,13 @@ import org.graphstream.graph.Node;
 import org.graphstream.graph.Path;
 import org.graphstream.graph.implementations.SingleGraph;
 
-import com.ga.tsp.*;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.TreeMap;
+import java.util.*;
 
 public abstract class TestMapMaker{
     public static void main(String args[]) {
         Graph inputMap = makeTestMap();
         PopulationMaker pm = new PopulationMaker(inputMap);
-        TreeMap<Double, ArrayList<Path>> population= pm.generate(100000);
+        TreeMap<Double, ArrayList<Path>> population= pm.generate(5);
         pm.showPopulation(population);
 
 //    	Path path = pm.getValidPath();

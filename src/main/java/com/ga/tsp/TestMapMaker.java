@@ -12,13 +12,18 @@ public abstract class TestMapMaker{
     public static void main(String args[]) {
         Graph inputMap = makeTestMap();
         PopulationMaker pm = new PopulationMaker(inputMap);
-        TreeMap<Double, ArrayList<Path>> population= pm.generate(5);
-        pm.showPopulation(population);
+        CrossoverAgent ca = new CrossoverAgent(inputMap);
+//        TreeMap<Double, ArrayList<Path>> population= pm.generate(5);
+//        pm.showPopulation(population);
 
-//    	Path path = pm.getValidPath();
-//
-//    	pm.showPathGraph(path);
-//		System.out.println(path.toString());
+    	Path path = pm.getValidPath();
+
+        System.out.print(path.toString());
+        List<Path> splitParent = ca.splitPath(path, 5);
+        System.out.print(splitParent.get(0).toString());
+        System.out.print(splitParent.get(1).toString());
+
+
 
 
     }

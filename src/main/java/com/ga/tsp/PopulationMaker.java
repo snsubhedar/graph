@@ -77,14 +77,7 @@ public class PopulationMaker {
 
             if (!randomPath.contains(thisRandomNode)){ // If the random path does not contains the node
 
-                String randomEdgeName = previousNode.toString().concat(thisRandomNode.toString());
-                String inverseRandomEdgeName = thisRandomNode.toString().concat(previousNode.toString());
-
-                if (!((inputMap.getEdge(randomEdgeName))== null)){
-                    randomPath.add(inputMap.getEdge(randomEdgeName));
-                }else{
-                    randomPath.add(inputMap.getEdge(inverseRandomEdgeName));
-                }
+                randomPath.add(getEquivalentEdge(previousNode,thisRandomNode));
                 previousNode = thisRandomNode;
 
             }//end of if
@@ -158,6 +151,29 @@ public class PopulationMaker {
 
         graph.display();
 
+
+    }
+
+    public Node pickRandomNode (){
+        Random r = new Random();
+        int randomNumber = r.nextInt(inputMap.getNodeCount());
+        Node randomNode = inputMap.getNode(randomNumber);
+
+        return randomNode;
+    }
+
+    public Edge getEquivalentEdge (Node nodeOne, Node nodeTwo){
+        StringBuilder builder = new StringBuilder();
+
+        if (!((inputMap.getEdge(builder.append(nodeOne.toString()).append(nodeTwo.toString()).toString())== null))){
+
+            return inputMap.getEdge(builder.toString());
+
+        }else{
+
+            builder.delete(0, builder.length()); // clears the builder
+            return inputMap.getEdge(builder.append(nodeTwo.toString()).append(nodeOne.toString()).toString());
+        }
 
     }
 

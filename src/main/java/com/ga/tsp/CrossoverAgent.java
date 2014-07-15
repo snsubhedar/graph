@@ -96,26 +96,39 @@ public class CrossoverAgent {
         return crossoverPath;
     }
 
-    public List <Path> splitPath (Path path, int crossoverPoint){
+    public List <Path> splitPath (Path path){
+        int crossoverPoint = getCrossoverPoint(path);
         PopulationMaker pm = new PopulationMaker(inputMap);
         Path halfTwo = new Path();
         Path halfOne = path.getACopy();
 
         Path halfTwoInverse = new Path();
-        for (int i = crossoverPoint; i>=0; i--){ // will return the second half in its inverse form
-            halfTwoInverse.add(halfOne.popEdge());
+        for (int i = crossoverPoint; i>1; i--){ // will return the second half in its inverse form
+            if (!(halfTwoInverse.empty())){
+            	halfTwoInverse.add(halfOne.popEdge());
+            }else{
+            	Edge edgeToAdd = halfOne.popEdge();
+            	halfTwoInverse.setRoot(edgeToAdd.getNode0());
+            	halfTwoInverse.add(edgeToAdd);
+            }
         }
+        
+        int numberOfEdgesInverse = halfTwoInverse.getEdgeCount();
 
-        for (Edge edge : halfTwoInverse.getEdgeSet()){
+        while (numberOfEdgesInverse > 0){
             Edge edgeToAdd = halfTwoInverse.popEdge();
             if (!(halfTwo.empty())){
                 halfTwo.add(pm.getEquivalentEdge(edgeToAdd.getNode0(), edgeToAdd.getNode1()));
             }else{
-                halfTwo.setRoot(edgeToAdd.getNode0());
+                halfTwo.setRoot(path.getNodePath().get(crossoverPoint++));
                 halfTwo.add(pm.getEquivalentEdge(edgeToAdd.getNode0(), edgeToAdd.getNode1()));
             }
+            
+            numberOfEdgesInverse --;
 
         }
+        
+        halfOne.popEdge();
 
         List <Path> splitParent = new ArrayList<Path>();
 
@@ -128,7 +141,7 @@ public class CrossoverAgent {
     }
 
 
-    private int selectCrossoverPoint(Path path){
+    private int getCrossoverPoint(Path path){
         int crossoverPoint = path.size()/2; //currently in the middle
         //here we can determine the crossover point logic (randomly if necessary)
         return crossoverPoint;

@@ -19,7 +19,7 @@ public abstract class TestMapMaker{
     	Path path = pm.getValidPath();
 
         System.out.print(path.toString());
-        List<Path> splitParent = ca.splitPath(path, 5);
+        List<Path> splitParent = ca.splitPath(path);
         System.out.print(splitParent.get(0).toString());
         System.out.print(splitParent.get(1).toString());
 

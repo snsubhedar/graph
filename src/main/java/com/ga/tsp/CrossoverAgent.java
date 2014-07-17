@@ -16,10 +16,12 @@ public class CrossoverAgent {
 
     static Graph inputMap;
     int chromosomeCount;
+    int cutoffPercentage;
 
-    public CrossoverAgent(Graph map, int organismCount){
+    public CrossoverAgent(Graph map, int organismCount, int fitnessPercentage){
         inputMap = map;
         chromosomeCount = organismCount; 
+        cutoffPercentage = fitnessPercentage;
         
         
     }
@@ -33,16 +35,16 @@ public class CrossoverAgent {
 	}
 
     public TreeMap <Double, ArrayList <Path>> cleanWorkspace (TreeMap <Double, ArrayList <Path>> populationMap){
-        final int topTenCount = chromosomeCount/10;
+        final int numberOfFitChromosomeCount = chromosomeCount/(100/cutoffPercentage);
         TreeMap <Double, ArrayList <Path>> mapWorkspace = new TreeMap <Double, ArrayList <Path>>();
 
         int numberOfPathsAdded = 0;
 
          Iterator<Entry<Double, ArrayList<Path>>> it = populationMap.entrySet().iterator();
-         while (it.hasNext() && numberOfPathsAdded < topTenCount) {
+         while (it.hasNext() && numberOfPathsAdded < numberOfFitChromosomeCount) {
              Map.Entry pairs = (Map.Entry)it.next();
 
-             if ( (numberOfPathsAdded + ((ArrayList <Path>)(pairs.getValue())).size() ) < topTenCount){
+             if ( (numberOfPathsAdded + ((ArrayList <Path>)(pairs.getValue())).size() ) < numberOfFitChromosomeCount){
                  mapWorkspace.put((Double)pairs.getKey(), (ArrayList <Path>) pairs.getValue());
              }
 

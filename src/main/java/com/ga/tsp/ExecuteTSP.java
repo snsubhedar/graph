@@ -10,6 +10,7 @@ public class ExecuteTSP {
 
     static int numberOfChromosomes = 100;
     final static int numberOfGenerations = 5;
+    final static int fitnessPercentage = 10;
 
     public static void main(String args[]) {
         executeGA();
@@ -21,7 +22,7 @@ public class ExecuteTSP {
         final Graph inputMap = mapMaker.makeRandomMap();
         PopulationMaker populationMaker = new PopulationMaker(inputMap);
         TreeMap <Double, ArrayList <Path>> population = populationMaker.generate(numberOfChromosomes);
-        CrossoverAgent crossoverAgent = new CrossoverAgent(inputMap, numberOfChromosomes);
+        CrossoverAgent crossoverAgent = new CrossoverAgent(inputMap, numberOfChromosomes, fitnessPercentage);
 
         for (int i = numberOfGenerations; i>0; i--){
             population = crossoverAgent.cleanWorkspace(population);

@@ -15,9 +15,6 @@ public class PopulationMaker {
 
     static Graph inputMap;
 
-    public static void main(String[] args) {
-    }
-
     public PopulationMaker(Graph g){
         inputMap = g;
     }
@@ -62,7 +59,7 @@ public class PopulationMaker {
 
     }
 
-    public Path getValidPath(){
+    private Path getValidPath(){
         Path randomPath = new Path ();
         randomPath.setRoot(inputMap.getNode(0));
         Node previousNode = randomPath.getRoot();
@@ -121,38 +118,38 @@ public class PopulationMaker {
     }
 
 
-    public void showPathGraph (Path path){
-        Graph graph = inputMap;
-
-        final String labelStyleSheet =
-                "edge {" +
-                        " shape: line;" +
-                        " size: 1px, 0px;" +
-                        " fill-color: brown3" +
-                        ";" +
-                        " text-mode: normal;" +
-                        " text-alignment: center;" +
-                        "}"+
-                        "edge::selected {" +
-                        "       fill-color: green;" +
-                        "}";
-        graph.addAttribute("ui.stylesheet" , labelStyleSheet);
-        Collection <Edge> pathEdgeSet = path.getEdgeSet();
-
-        for (Iterator<Edge> iterator = pathEdgeSet.iterator(); iterator.hasNext();) {
-            Edge pathEdge = (Edge) iterator.next();
-
-            Edge graphEdge = graph.getEdge(pathEdge.toString());
-
-            graphEdge.setAttribute("ui.class", "selected");
-
-
-        }
-
-        graph.display();
-
-
-    }
+//    public void showPathGraph (Path path){
+//        Graph graph = inputMap;
+//
+//        final String labelStyleSheet =
+//                "edge {" +
+//                        " shape: line;" +
+//                        " size: 1px, 0px;" +
+//                        " fill-color: brown3" +
+//                        ";" +
+//                        " text-mode: normal;" +
+//                        " text-alignment: center;" +
+//                        "}"+
+//                        "edge::selected {" +
+//                        "       fill-color: green;" +
+//                        "}";
+//        graph.addAttribute("ui.stylesheet" , labelStyleSheet);
+//        Collection <Edge> pathEdgeSet = path.getEdgeSet();
+//
+//        for (Iterator<Edge> iterator = pathEdgeSet.iterator(); iterator.hasNext();) {
+//            Edge pathEdge = (Edge) iterator.next();
+//
+//            Edge graphEdge = graph.getEdge(pathEdge.toString());
+//
+//            graphEdge.setAttribute("ui.class", "selected");
+//
+//
+//        }
+//
+//        graph.display();
+//
+//
+//    }
 
     public Node pickRandomNode (){
         Random r = new Random();

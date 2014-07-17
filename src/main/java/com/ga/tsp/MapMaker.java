@@ -8,29 +8,15 @@ import org.graphstream.graph.implementations.SingleGraph;
 
 import java.util.*;
 
-public abstract class TestMapMaker{
-    public static void main(String args[]) {
-        Graph inputMap = makeTestMap();
-        PopulationMaker pm = new PopulationMaker(inputMap);
-        CrossoverAgent ca = new CrossoverAgent(inputMap);
-//        TreeMap<Double, ArrayList<Path>> population= pm.generate(5);
-//        pm.showPopulation(population);
+public class MapMaker{
 
-    	Path path = pm.getValidPath();
-
-        System.out.print(path.toString());
-        List<Path> splitParent = ca.splitPath(path);
-        System.out.print(splitParent.get(0).toString());
-        System.out.print(splitParent.get(1).toString());
-
-
-
-
+	public static void main(String args[]) {
+		new MapMaker();
     }
 
 
-    private static  Graph makeTestMap() {
-        Graph graph = new SingleGraph("inputMap");
+    public Graph makeRandomMap() {
+    	Graph graph = new SingleGraph ("inputMap");
         boolean isDirected = false;
 
         graph.setStrict(false);
@@ -77,7 +63,7 @@ public abstract class TestMapMaker{
     }
 
 
-    private static void addAllEdgeInstances (Graph graph, boolean isDirected){ //run this function s
+	private static void addAllEdgeInstances (Graph graph, boolean isDirected){ //run this function s
         Collection<Node> noteSet = graph.getNodeSet();
 
         for (Iterator iterator = noteSet.iterator(); iterator.hasNext();) {

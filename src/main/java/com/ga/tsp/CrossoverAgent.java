@@ -1,16 +1,12 @@
 package com.ga.tsp;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.Map.Entry;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.Path;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 public class CrossoverAgent {
 
@@ -27,9 +23,49 @@ public class CrossoverAgent {
     }
     
     public TreeMap <Double, ArrayList <Path>> crossover(TreeMap <Double, ArrayList <Path>> workspace){
+    	Random random = new Random();
+    	int numberOfPathsInWorkspace = chromosomeCount/(100/cutoffPercentage);
+    	TreeMap <Double, ArrayList <Path>> newGeneration = workspace;
+    	List <Double> keys = new ArrayList <Double> (workspace.keySet());
     	
-		
-		return null;
+    	while (numberOfPathsInWorkspace < chromosomeCount){
+    		ArrayList<Path> one = workspace.get(keys.get(random.nextInt(keys.size()-1)));
+    		ArrayList<Path> two = workspace.get(keys.get(random.nextInt(keys.size()-1)));
+    		
+    		Path parentOne = one.get(random.nextInt(one.size()));
+    		Path parentTwo = two.get(random.nextInt(two.size()));
+    		List <Path> pathsToAdd= crossoverPaths(parentOne, parentTwo);
+    		
+    		for (Iterator<Path> iterator = pathsToAdd.iterator(); iterator.hasNext();) {
+				Path currentPath = (Path) iterator.next();
+				Double pathWeight = currentPath.getPathWeight("weight");
+				ArrayList <Path> currentPathArray = newGeneration.get(pathWeight);
+				 if(currentPathArray != null){
+		         // Weight is already present in TreeMap and add this Path to the respective array list.
+					 boolean isDuplicate = false;
+					 for (Path pathInArray: currentPathArray){
+						 if (pathInArray.equals(currentPath)){
+		                        isDuplicate = true;
+						 }
+					 }
+					 
+					 if (isDuplicate == false){
+						 currentPathArray.add(currentPath);
+						 numberOfPathsInWorkspace++;
+					 }
+
+				 } else {
+		                // This weight has never been seen before so make a new key and array list to add to the LinkedHashMap.
+					 currentPathArray=new ArrayList <Path>();
+					 currentPathArray.add(currentPath);
+					 numberOfPathsInWorkspace++;
+					 newGeneration.put(pathWeight, currentPathArray);
+				 }
+			}
+    	}
+    	
+    	
+		return newGeneration;
 		
 
 	}
@@ -44,8 +80,9 @@ public class CrossoverAgent {
          while (it.hasNext() && numberOfPathsAdded < numberOfFitChromosomeCount) {
              Map.Entry pairs = (Map.Entry)it.next();
 
-             if ( (numberOfPathsAdded + ((ArrayList <Path>)(pairs.getValue())).size() ) < numberOfFitChromosomeCount){
+             if ( (numberOfPathsAdded + ((ArrayList <Path>)(pairs.getValue())).size() ) <= numberOfFitChromosomeCount){
                  mapWorkspace.put((Double)pairs.getKey(), (ArrayList <Path>) pairs.getValue());
+                 numberOfPathsAdded++;
              }
 
          }

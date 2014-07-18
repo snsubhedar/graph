@@ -3,10 +3,11 @@ package com.ga.tsp;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
-import org.graphstream.graph.Path;
 import org.graphstream.graph.implementations.SingleGraph;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Random;
 
 public class MapMaker{
 
@@ -66,7 +67,7 @@ public class MapMaker{
 	private static void addAllEdgeInstances (Graph graph, boolean isDirected){ //run this function s
         Collection<Node> noteSet = graph.getNodeSet();
 
-        for (Iterator iterator = noteSet.iterator(); iterator.hasNext();) {
+        for (Iterator<Node> iterator = noteSet.iterator(); iterator.hasNext();) {
             Node startNode = (Node) iterator.next();
 
             for (Iterator<Node> iterator2 = noteSet.iterator(); iterator2.hasNext();) {

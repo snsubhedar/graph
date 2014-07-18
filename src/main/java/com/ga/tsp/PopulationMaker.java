@@ -8,8 +8,11 @@ import org.graphstream.graph.Node;
 import org.graphstream.graph.Path;
 import scala.util.Random;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 
 public class PopulationMaker {
 
@@ -100,8 +103,6 @@ public class PopulationMaker {
         while (it.hasNext()) {
             Map.Entry pairs = (Map.Entry)it.next();
             System.out.println(pairs.getKey() + " : " + showPaths((ArrayList<Path>) pairs.getValue()));
-            it.remove(); // avoids a ConcurrentModificationException
-
         }
 
     }
@@ -110,7 +111,7 @@ public class PopulationMaker {
         StringBuilder builder = new StringBuilder();
 
         for (Path path : paths){
-            builder.append(" [").append(path.toString()).append("] ");
+            builder.append(path.toString());
         }
 
         return builder.toString();

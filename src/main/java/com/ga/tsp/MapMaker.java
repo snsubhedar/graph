@@ -41,16 +41,6 @@ public class MapMaker{
         addAllEdgeInstances(graph, isDirected);
 
         addRandomWeights(graph, "weight");
-//        graph.getEdge("AB").setAttribute("weight", 50.0);
-//        graph.getEdge("BC").setAttribute("weight", 150.0);
-//        graph.getEdge("CD").setAttribute("weight", 250.0);
-//        graph.getEdge("AC").setAttribute("weight", 250.0);
-//        graph.getEdge("AD").setAttribute("weight", 250.0);
-//        graph.getEdge("BD").setAttribute("weight", 250.0);
-//        graph.getEdge("AD").setAttribute("weight", 25);
-//        graph.getEdge("DE").setAttribute("weight", 5);
-//        graph.getEdge("DF").setAttribute("weight", 50);
-//        graph.getEdge("EF").setAttribute("weight", 150);
 
         for (Node node : graph) {
             node.addAttribute("ui.label", node.getId());

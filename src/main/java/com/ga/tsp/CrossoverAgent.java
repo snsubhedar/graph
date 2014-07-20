@@ -93,7 +93,8 @@ public class CrossoverAgent {
     }
     
     private List <Path> crossoverPaths (Path pathOne, Path pathTwo){
-    	List <Path> pathOneSplit = splitPath(pathOne);
+    	List <Path> pathOneSplit = splitPath(pathOne);  //SS: use apache.commons.lang3.tuple.Pair instead of list
+
     	List <Path> pathTwoSplit = splitPath (pathTwo);
     	
     	Path crossoverOne = crossoverPathHalves (pathOneSplit.get(0), pathTwoSplit.get(1));
@@ -108,20 +109,24 @@ public class CrossoverAgent {
     	
     }
 
-    private Path crossoverPathHalves (Path halfOne, Path halfTwo){ // once we have seperated the paths in crossover paths we need to cross them over one at a time
+    //SS: if Ch1 and Ch2 are two chromosomes with p1 and p2 being divided parts,
+    // you have to pick Ch1p1--Ch2p2 .. Instead of searching for random node in entire graph (expensive if graph is big)
+    // simply pick a random node from Ch1p2. Conversely, simply pick a random node from Ch2p2 to complete path for Ch2p1
+
+    private Path crossoverPathHalves (Path halfOne, Path halfTwo){ // once we have separated the paths in crossover paths we need to cross them over one at a time
         final int completedPathSize = inputMap.getNodeCount();
         PopulationMaker pm = new PopulationMaker(inputMap);
         Path crossoverPath = halfOne.getACopy();
         List <Node> halfTwoNodePath= halfTwo.getNodePath();
         
         while (crossoverPath.size() < completedPathSize){
-        	Node thisNode = halfTwoNodePath.get(0);
+        	Node thisNode = halfTwoNodePath.get(halfTwoNodePath.size() - 1);
         	if (crossoverPath.contains(thisNode)){
         		crossoverPath.add(pm.getEquivalentEdge(crossoverPath.peekNode(), pickRandomNodeNotInPath(crossoverPath, halfTwo)));
         	}else{
         		crossoverPath.add(pm.getEquivalentEdge(crossoverPath.peekNode(), thisNode));
         	}
-        	halfTwoNodePath.remove(0);
+        	halfTwoNodePath.remove(halfTwoNodePath.size() - 1);
         }
         
         
@@ -148,27 +153,31 @@ public class CrossoverAgent {
             	halfTwoInverse.add(edgeToAdd);
             }
         }
-        
-        int numberOfEdgesInverse = halfTwoInverse.getEdgeCount(); //avoids concurrent modification error 
-        while (numberOfEdgesInverse > 0){
-            Edge edgeToAdd = halfTwoInverse.popEdge();
-            if (!(halfTwo.empty())){
-                halfTwo.add(pm.getEquivalentEdge(edgeToAdd.getNode0(), edgeToAdd.getNode1()));
-            }else{
-                halfTwo.setRoot(path.getNodePath().get(crossoverPoint++));
-                halfTwo.add(pm.getEquivalentEdge(edgeToAdd.getNode0(), edgeToAdd.getNode1()));
-            }
-            
-            numberOfEdgesInverse --;
 
-        }
+        //why do you need this? Second half is used to check for missing nodes in second crossover
+        // and they will be picked in random anyway.
+       // I think this is unnecessary.
+
+//        int numberOfEdgesInverse = halfTwoInverse.getEdgeCount(); //avoids concurrent modification error
+//        while (numberOfEdgesInverse > 0){
+//            Edge edgeToAdd = halfTwoInverse.popEdge();
+//            if (!(halfTwo.empty())){
+//                halfTwo.add(pm.getEquivalentEdge(edgeToAdd.getNode0(), edgeToAdd.getNode1()));
+//            }else{
+//                halfTwo.setRoot(path.getNodePath().get(crossoverPoint++));
+//                halfTwo.add(pm.getEquivalentEdge(edgeToAdd.getNode0(), edgeToAdd.getNode1()));
+//            }
+//
+//            numberOfEdgesInverse --;
+//
+//        }
         
-        halfOne.popEdge();
+        halfOne.popEdge();   // SS: why?
 
         List <Path> splitParent = new ArrayList<Path>();
 
         splitParent.add(0, halfOne);
-        splitParent.add(1, halfTwo);
+        splitParent.add(1, halfTwoInverse);
 
         return splitParent;
 

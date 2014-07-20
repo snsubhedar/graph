@@ -4,16 +4,27 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.SingleGraph;
+import org.graphstream.ui.swingViewer.Viewer;
 
 import java.util.Collection;
 import java.util.Iterator;
 
 public class GraphExplore {
-    public static void main(String args[]) {
-        // new com.ga.tsp.GraphExplore();
-        //System.out.print("Hello World");
+
+    Graph graph;
+
+    public GraphExplore(Graph graph)
+    {
+        this.graph = graph;
     }
 
+    public static void main(String args[]) {
+        new com.ga.tsp.GraphExplore();
+    }
+
+    public static void show () {
+        new com.ga.tsp.GraphExplore();
+    }
     public GraphExplore() {
         Graph graph = new SingleGraph("inputMap");
         boolean isDirected = false;
@@ -21,7 +32,7 @@ public class GraphExplore {
         graph.setStrict(false);
         graph.setAutoCreate(true);
 
-        graph.addAttribute("ui.stylesheet" , labelStyleSheet );
+        graph.addAttribute("ui.stylesheet" , styleSheet + " " + labelStyleSheet );
 
 
 
@@ -57,9 +68,9 @@ public class GraphExplore {
         {
             edge.addAttribute("ui.label", edge.getAttribute("distance"));
         }
+        Viewer viewer = graph.display();
 
-
-        explore(graph.getNode("A"));
+        explore(graph);
     }
 
     protected String styleSheet =
@@ -72,12 +83,17 @@ public class GraphExplore {
 
     protected String labelStyleSheet =
             "edge {" +
-                    " shape: line;" +
-                    " size: 1px, 0px;" +
-                    " fill-color: brown3;" +
-                    ";" +
-                    " text-mode: normal;" +
-                    " text-alignment: center;" +
+                    "       shape: line;" +
+                    "       size: 1px, 0px;" +
+                    "       fill-color: yellow;" +
+                    "       text-mode: normal;" +
+                    "       text-alignment: center;" +
+                    "}" +
+                    "edge.marked {" +
+                    "       fill-color: red;" +
+                    "}" +
+                    "edge.unMarked {" +
+                    "       fill-color: yellow;" +
                     "}";
 
     public void explore(Node source) {
@@ -90,6 +106,24 @@ public class GraphExplore {
         }
     }
 
+    public void explore(Graph graph) {
+
+        Collection<Edge> edges = graph.getEdgeSet();
+
+        for(Edge edge : edges)
+        {
+            edge.setAttribute("ui.class", "marked");
+            sleep();
+        }
+
+        for(Edge edge : edges)
+        {
+            edge.setAttribute("ui.class", "unMarked");
+            sleep();
+        }
+    }
+
+    //waits for 1 second
     protected void sleep() {
         try { Thread.sleep(1000); } catch (Exception e) {}
     }

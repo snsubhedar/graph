@@ -23,19 +23,18 @@ public class MapMaker{
         graph.setStrict(false);
         graph.setAutoCreate(true);
 
-        graph.addAttribute("ui.stylesheet" , labelStyleSheet, styleSheet );
+        graph.addAttribute("ui.stylesheet");
 
-
-
-        graph.addEdge("AB", "A", "B", isDirected);
-        graph.addEdge("BC", "B", "C", isDirected);
-        graph.addEdge("CD", "C", "D", isDirected);
-        graph.addEdge("DE", "D", "E", isDirected);
-        graph.addEdge("DF", "D", "F", isDirected);
-        graph.addEdge("EF", "E", "F", isDirected);
-        graph.addEdge("EG", "E", "G", isDirected);
-        graph.addEdge("EH", "E", "H", isDirected);
-        graph.addEdge("EI", "E", "I", isDirected);
+        graph.addNode("A");
+        graph.addNode("B");
+        graph.addNode("C");
+        graph.addNode("D");
+        graph.addNode("E");
+        graph.addNode("F");
+        graph.addNode("G");
+        graph.addNode("H");
+        graph.addNode("I");
+        graph.addNode("J");
 
 
         addAllEdgeInstances(graph, isDirected);
@@ -51,14 +50,9 @@ public class MapMaker{
 //        graph.getEdge("DE").setAttribute("weight", 5);
 //        graph.getEdge("DF").setAttribute("weight", 50);
 //        graph.getEdge("EF").setAttribute("weight", 150);
-
-        for (Node node : graph) {
-            node.addAttribute("ui.label", node.getId());
-        }
-
         for (Edge edge : graph.getEdgeSet())
         {
-            edge.addAttribute("ui.label", edge.getAttribute("weight"));
+            edge.addAttribute("ui.label", edge.getAttribute("distance"));
         }
         return graph;
     }
@@ -90,22 +84,27 @@ public class MapMaker{
         }
     }
 
-    protected static String labelStyleSheet =
-            "edge {" +
-                    " shape: line;" +
-                    " size: 1px, 0px;" +
-                    " fill-color: brown3" +
-                    ";" +
-                    " text-mode: normal;" +
-                    " text-alignment: center;" +
-                    "}";
-
-    protected static String styleSheet =
+    protected String styleSheet =
             "node {" +
                     "       fill-color: black;" +
                     "}" +
                     "node.marked {" +
                     "       fill-color: red;" +
+                    "}";
+
+    protected String labelStyleSheet =
+            "edge {" +
+                    "       shape: line;" +
+                    "       size: 1px, 0px;" +
+                    "       fill-color: yellow;" +
+                    "       text-mode: normal;" +
+                    "       text-alignment: center;" +
+                    "}" +
+                    "edge.marked {" +
+                    "       fill-color: red;" +
+                    "}" +
+                    "edge.unMarked {" +
+                    "       fill-color: yellow;" +
                     "}";
 
 

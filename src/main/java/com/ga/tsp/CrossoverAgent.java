@@ -1,5 +1,7 @@
 package com.ga.tsp;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.Node;
@@ -93,12 +95,11 @@ public class CrossoverAgent {
     }
     
     private List <Path> crossoverPaths (Path pathOne, Path pathTwo){
-    	List <Path> pathOneSplit = splitPath(pathOne);  //SS: use apache.commons.lang3.tuple.Pair instead of list
-
-    	List <Path> pathTwoSplit = splitPath (pathTwo);
+    	Pair <Path, Path> pathOneSplit = splitPath(pathOne);
+    	Pair <Path, Path> pathTwoSplit = splitPath (pathTwo);
     	
-    	Path crossoverOne = crossoverPathHalves (pathOneSplit.get(0), pathTwoSplit.get(1));
-    	Path crossoverTwo = crossoverPathHalves(pathTwoSplit.get(0), pathOneSplit.get(1));
+    	Path crossoverOne = crossoverPathHalves (pathOneSplit.getLeft().getACopy(), pathTwoSplit.getRight().getACopy(), pathOneSplit.getRight().getACopy());
+    	Path crossoverTwo = crossoverPathHalves(pathTwoSplit.getLeft().getACopy(), pathOneSplit.getRight().getACopy(), pathTwoSplit.getRight().getACopy());
     	
     	List <Path> crossedOverPaths = new ArrayList <Path>();
     	crossedOverPaths.add(0, crossoverOne);
@@ -109,24 +110,23 @@ public class CrossoverAgent {
     	
     }
 
-    //SS: if Ch1 and Ch2 are two chromosomes with p1 and p2 being divided parts,
-    // you have to pick Ch1p1--Ch2p2 .. Instead of searching for random node in entire graph (expensive if graph is big)
-    // simply pick a random node from Ch1p2. Conversely, simply pick a random node from Ch2p2 to complete path for Ch2p1
-
-    private Path crossoverPathHalves (Path halfOne, Path halfTwo){ // once we have separated the paths in crossover paths we need to cross them over one at a time
+    private Path crossoverPathHalves (Path halfOne, Path halfTwo, Path pathOneHalfTwo){ // once we have separated the paths in crossover paths we need to cross them over one at a time
         final int completedPathSize = inputMap.getNodeCount();
         PopulationMaker pm = new PopulationMaker(inputMap);
         Path crossoverPath = halfOne.getACopy();
         List <Node> halfTwoNodePath= halfTwo.getNodePath();
+        List <Node> nodesToPickFrom = pathOneHalfTwo.getNodePath();
+        nodesToPickFrom.remove(0);
+        
         
         while (crossoverPath.size() < completedPathSize){
-        	Node thisNode = halfTwoNodePath.get(halfTwoNodePath.size() - 1);
+        	Node thisNode = halfTwoNodePath.get(halfTwoNodePath.size()-1);
         	if (crossoverPath.contains(thisNode)){
-        		crossoverPath.add(pm.getEquivalentEdge(crossoverPath.peekNode(), pickRandomNodeNotInPath(crossoverPath, halfTwo)));
+        		crossoverPath.add(pm.getEquivalentEdge(crossoverPath.peekNode(), pickRandomNodeNotInPath(crossoverPath, halfTwo, nodesToPickFrom)));
         	}else{
         		crossoverPath.add(pm.getEquivalentEdge(crossoverPath.peekNode(), thisNode));
         	}
-        	halfTwoNodePath.remove(halfTwoNodePath.size() - 1);
+        		halfTwoNodePath.remove(halfTwoNodePath.size()-1);
         }
         
         
@@ -137,10 +137,8 @@ public class CrossoverAgent {
         return crossoverPath;
     }
 
-    private List <Path> splitPath (Path path){
+    private Pair <Path, Path> splitPath (Path path){
         int crossoverPoint = getCrossoverPoint(path);
-        PopulationMaker pm = new PopulationMaker(inputMap);
-        Path halfTwo = new Path();
         Path halfOne = path.getACopy();
 
         Path halfTwoInverse = new Path();
@@ -153,31 +151,10 @@ public class CrossoverAgent {
             	halfTwoInverse.add(edgeToAdd);
             }
         }
-
-        //why do you need this? Second half is used to check for missing nodes in second crossover
-        // and they will be picked in random anyway.
-       // I think this is unnecessary.
-
-//        int numberOfEdgesInverse = halfTwoInverse.getEdgeCount(); //avoids concurrent modification error
-//        while (numberOfEdgesInverse > 0){
-//            Edge edgeToAdd = halfTwoInverse.popEdge();
-//            if (!(halfTwo.empty())){
-//                halfTwo.add(pm.getEquivalentEdge(edgeToAdd.getNode0(), edgeToAdd.getNode1()));
-//            }else{
-//                halfTwo.setRoot(path.getNodePath().get(crossoverPoint++));
-//                halfTwo.add(pm.getEquivalentEdge(edgeToAdd.getNode0(), edgeToAdd.getNode1()));
-//            }
-//
-//            numberOfEdgesInverse --;
-//
-//        }
         
-        halfOne.popEdge();   // SS: why?
+        halfOne.popEdge();
 
-        List <Path> splitParent = new ArrayList<Path>();
-
-        splitParent.add(0, halfOne);
-        splitParent.add(1, halfTwoInverse);
+        Pair <Path, Path> splitParent = new ImmutablePair<Path, Path>(halfOne, halfTwoInverse);
 
         return splitParent;
 
@@ -185,24 +162,40 @@ public class CrossoverAgent {
     }
 
 
-    private int getCrossoverPoint(Path path){
-        int crossoverPoint = path.size()/2; //currently in the middle
-        //here we can determine the crossover point logic (randomly if necessary)
-        return crossoverPoint;
+    private int getCrossoverPoint(Path path){ // returns random crossover point in the middle 50% of the path 
+        Random r= new Random();
+        int pathSize = path.size();
+        if (pathSize < 16){
+        	int lowerBound = pathSize/4 +2; 			// lower 25%  
+            int upperBound = ((pathSize/4)*3) -1 ; 		// upper 75%
+            int range = upperBound - lowerBound;
+            int crossoverPoint = (r.nextInt(range)) + lowerBound;
+            
+            return crossoverPoint;
+        }else{
+        	int lowerBound = pathSize/4; 			// lower 25%  
+            int upperBound = ((pathSize/4)*3); 		// upper 75%
+            int range = upperBound - lowerBound;
+            int crossoverPoint = (r.nextInt(range)) + lowerBound;
+            
+            return crossoverPoint;
+        }
+        
     }
     
-    private Node pickRandomNodeNotInPath (Path path, Path pathTwo){
-    	PopulationMaker pm = new PopulationMaker(inputMap);	
-    	
+    private Node pickRandomNodeNotInPath (Path path, Path pathTwo, List <Node> nodesToPickFrom){
+    	Random r = new Random();
     	while (true){
-    		Node randomNode = pm.pickRandomNode();
+    		int randomNumber = r.nextInt(nodesToPickFrom.size());
+    		Node randomNode = nodesToPickFrom.get(randomNumber);
 			if ((!(path.contains(randomNode))) && (!(pathTwo.contains(randomNode)))){
-				
+				nodesToPickFrom.remove(randomNumber);
     			return randomNode;
+    		}else{
+    			nodesToPickFrom.remove(randomNumber);
     		}
     	}
     	
-    	
-    	
     }
+    
 }

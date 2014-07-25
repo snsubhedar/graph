@@ -169,7 +169,7 @@ public class PopulationMaker {
 
         }else{
 
-            builder = new StringBuilder(); // clears the builder
+            builder.delete(0, builder.length()); // clears the builder
             return inputMap.getEdge(builder.append(nodeTwo.toString()).append(nodeOne.toString()).toString());
         }
 

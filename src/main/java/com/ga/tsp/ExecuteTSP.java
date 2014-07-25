@@ -8,13 +8,13 @@ import java.util.TreeMap;
 
 public class ExecuteTSP {
 
-    static int numberOfChromosomes =1000;
-    final static int numberOfGenerations = 1000;
+    static int numberOfChromosomes =10;
+    final static int numberOfGenerations = 500;
     final static int fitnessPercentage = 50;
 
-    public static void main(String args[]) {
+    public static void main(String args[]) throws InterruptedException {
     	executeGA();
-        
+
     }
 
 
@@ -32,6 +32,8 @@ public class ExecuteTSP {
             		" Path:" + population.firstEntry().getValue().get(population.firstEntry().getValue().size()-1).toString());
             population = crossoverAgent.crossover(population);
         }
+        
+        population = crossoverAgent.cleanWorkspace(population);
 
         populationMaker.showPopulation(population);
 

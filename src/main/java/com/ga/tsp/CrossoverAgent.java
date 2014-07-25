@@ -60,8 +60,8 @@ public class CrossoverAgent {
 		                // This weight has never been seen before so make a new key and array list to add to the LinkedHashMap.
 					 currentPathArray=new ArrayList <Path>();
 					 currentPathArray.add(currentPath);
-					 numberOfPathsInWorkspace++;
 					 newGeneration.put(pathWeight, currentPathArray);
+					 numberOfPathsInWorkspace++;
 				 }
 			}
     	}
@@ -116,7 +116,7 @@ public class CrossoverAgent {
         Path crossoverPath = halfOne.getACopy();
         List <Node> halfTwoNodePath= halfTwo.getNodePath();
         List <Node> nodesToPickFrom = pathOneHalfTwo.getNodePath();
-        nodesToPickFrom.remove(0);
+        nodesToPickFrom.remove(inputMap.getNode(0));
         
         
         while (crossoverPath.size() < completedPathSize){
@@ -163,23 +163,27 @@ public class CrossoverAgent {
 
 
     private int getCrossoverPoint(Path path){ // returns random crossover point in the middle 50% of the path 
-        Random r= new Random();
-        int pathSize = path.size();
-        if (pathSize < 16){
-        	int lowerBound = pathSize/4 +2; 			// lower 25%  
-            int upperBound = ((pathSize/4)*3) -1 ; 		// upper 75%
-            int range = upperBound - lowerBound;
-            int crossoverPoint = (r.nextInt(range)) + lowerBound;
-            
-            return crossoverPoint;
-        }else{
-        	int lowerBound = pathSize/4; 			// lower 25%  
-            int upperBound = ((pathSize/4)*3); 		// upper 75%
-            int range = upperBound - lowerBound;
-            int crossoverPoint = (r.nextInt(range)) + lowerBound;
-            
-            return crossoverPoint;
-        }
+//        Random r= new Random();
+//        int pathSize = path.size();
+//        if (pathSize < 11){
+//        	int lowerBound = pathSize/4 +2; 			// lower 25%  
+//            int upperBound = ((pathSize/4)*3) -1 ; 		// upper 75%
+//            int range = upperBound - lowerBound;
+//            int crossoverPoint = (r.nextInt(range)) + lowerBound;
+//            
+//            return crossoverPoint;
+//        }else{
+//        	int lowerBound = pathSize/3; 			// lower 25%  
+//            int upperBound = ((pathSize/4)*3); 		// upper 75%
+//            int range = upperBound - lowerBound;
+//            int crossoverPoint = (r.nextInt(range)) + lowerBound;
+//            return crossoverPoint;
+//        }
+    	
+    	int crossoverPoint = (path.size()/2)+3;
+    	return crossoverPoint;
+    
+    
         
     }
     

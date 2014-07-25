@@ -8,34 +8,37 @@ import java.util.TreeMap;
 
 public class ExecuteTSP {
 
-    static int numberOfChromosomes =10;
-    final static int numberOfGenerations = 500;
-    final static int fitnessPercentage = 50;
+    static int numberOfChromosomes =1000;
+    final static int numberOfGenerations = 5000;
+    final static int fitnessPercentage = 10;
 
-    public static void main(String args[]) throws InterruptedException {
+    public static void main(String args[]) {
     	executeGA();
-
     }
 
-
+ 
     private static void executeGA (){
         MapMaker mapMaker = new MapMaker();
         final Graph inputMap = mapMaker.makeRandomMap();
         PopulationMaker populationMaker = new PopulationMaker(inputMap);
         TreeMap <Double, ArrayList <Path>> population = populationMaker.generate(numberOfChromosomes);
         CrossoverAgent crossoverAgent = new CrossoverAgent(inputMap, numberOfChromosomes, fitnessPercentage);
+        MutationAgent mutationAgent = new MutationAgent (inputMap);
 
         for (Integer i = numberOfGenerations; i>0; i--){
             population = crossoverAgent.cleanWorkspace(population);
             System.out.println("Generation:" + i.toString() + 
             		" Weight=" + population.firstKey().toString() + 
             		" Path:" + population.firstEntry().getValue().get(population.firstEntry().getValue().size()-1).toString());
-            population = crossoverAgent.crossover(population);
+            if (i < numberOfGenerations && i%5 == 0){
+            	mutationAgent.reverseSequenceMutation(population);
+            }
+            crossoverAgent.crossover(population);
         }
         
         population = crossoverAgent.cleanWorkspace(population);
 
-        populationMaker.showPopulation(population);
+//        populationMaker.showPopulation(population);
 
 
     }

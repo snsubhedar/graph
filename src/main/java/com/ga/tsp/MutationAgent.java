@@ -81,26 +81,17 @@ public class MutationAgent {
 	}
 	
     private int getMutationPoint (Path path){ // returns random mutation point in the middle 50% of the path 
-//        Random r= new Random();
-//        int pathSize = path.size();
-//        if (pathSize < 16){
-//        	int lowerBound = pathSize/4 +2; 			// lower 25%  
-//            int upperBound = ((pathSize/4)*3) -1 ; 		// upper 75%
-//            int range = upperBound - lowerBound;
-//            int mutationPoint = (r.nextInt(range)) + lowerBound;
-//            
-//            return mutationPoint;
-//        }else{
-//        	int lowerBound = pathSize/4; 			// lower 25%  
-//            int upperBound = ((pathSize/4)*3); 		// upper 75%
-//            int range = upperBound - lowerBound;
-//            int mutationPoint = (r.nextInt(range)) + lowerBound;
-//            
-//            return mutationPoint;
-//        }
+        Random r= new Random();
+        int pathSize = path.size();
+        int lowerBound = pathSize/3; 			// lower 25%  
+        int upperBound = ((pathSize/4)*3); 		// upper 75%
+        int range = upperBound - lowerBound;
+        int mutationPoint = (r.nextInt(range)) + lowerBound;
+        
+        return mutationPoint;
     	
-    	int mutationPoint = (path.size()/2)+3;
-    	return mutationPoint;
+//    	int mutationPoint = (path.size()/2)+3;
+//    	return mutationPoint;
         
     }
 	

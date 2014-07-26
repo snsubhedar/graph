@@ -95,8 +95,9 @@ public class CrossoverAgent {
     }
     
     private List <Path> crossoverPaths (Path pathOne, Path pathTwo){
-    	Pair <Path, Path> pathOneSplit = splitPath(pathOne);
-    	Pair <Path, Path> pathTwoSplit = splitPath (pathTwo);
+    	int crossoverPoint = getCrossoverPoint(pathOne);
+    	Pair <Path, Path> pathOneSplit = splitPath(pathOne, crossoverPoint);
+    	Pair <Path, Path> pathTwoSplit = splitPath (pathTwo, crossoverPoint);
     	
     	Path crossoverOne = crossoverPathHalves (pathOneSplit.getLeft().getACopy(), pathTwoSplit.getRight().getACopy(), pathOneSplit.getRight().getACopy());
     	Path crossoverTwo = crossoverPathHalves(pathTwoSplit.getLeft().getACopy(), pathOneSplit.getRight().getACopy(), pathTwoSplit.getRight().getACopy());
@@ -137,8 +138,7 @@ public class CrossoverAgent {
         return crossoverPath;
     }
 
-    private Pair <Path, Path> splitPath (Path path){
-        int crossoverPoint = getCrossoverPoint(path);
+    private Pair <Path, Path> splitPath (Path path, int crossoverPoint){
         Path halfOne = path.getACopy();
 
         Path halfTwoInverse = new Path();
@@ -163,28 +163,15 @@ public class CrossoverAgent {
 
 
     private int getCrossoverPoint(Path path){ // returns random crossover point in the middle 50% of the path 
-//        Random r= new Random();
-//        int pathSize = path.size();
-//        if (pathSize < 11){
-//        	int lowerBound = pathSize/4 +2; 			// lower 25%  
-//            int upperBound = ((pathSize/4)*3) -1 ; 		// upper 75%
-//            int range = upperBound - lowerBound;
-//            int crossoverPoint = (r.nextInt(range)) + lowerBound;
-//            
-//            return crossoverPoint;
-//        }else{
-//        	int lowerBound = pathSize/3; 			// lower 25%  
-//            int upperBound = ((pathSize/4)*3); 		// upper 75%
-//            int range = upperBound - lowerBound;
-//            int crossoverPoint = (r.nextInt(range)) + lowerBound;
-//            return crossoverPoint;
-//        }
-    	
-    	int crossoverPoint = (path.size()/2)+3;
-    	return crossoverPoint;
-    
-    
+        Random r= new Random();
+        int pathSize = path.size();
+        int lowerBound = pathSize/3; 			// lower 25%  
+        int upperBound = ((pathSize/4)*3); 		// upper 75%
+        int range = upperBound - lowerBound;
+        int crossoverPoint = (r.nextInt(range)) + lowerBound;
         
+        return crossoverPoint;
+  
     }
     
     private Node pickRandomNodeNotInPath (Path path, Path pathTwo, List <Node> nodesToPickFrom){

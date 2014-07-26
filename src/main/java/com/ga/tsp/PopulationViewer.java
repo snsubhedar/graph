@@ -24,25 +24,52 @@ public class PopulationViewer {
         for (Node node : graph) {
             node.addAttribute("ui.label", node.getId());
         }
+
 		graph.addAttribute("ui.stylesheet" , styleSheet + " " + labelStyleSheet );
 		
-		Path path = population.firstEntry().getValue().get(population.firstEntry().getValue().size() - 1);
-		markPathOne(path);
+		List <Path> topThreePaths = new ArrayList <Path>();
 		
-		
+		Iterator<Entry<Double, ArrayList<Path>>> it = population.entrySet().iterator();
+        while (it.hasNext() && topThreePaths.size() < 3) {
+            Map.Entry pairs = (Map.Entry)it.next();
+            ArrayList <Path> topArrayList = (ArrayList <Path>)pairs.getValue();
+            for (Path path :topArrayList){
+            	topThreePaths.add(path);
+            }
+
+        }
+        
+        markPathThree(topThreePaths.get(2));
+        markPathTwo(topThreePaths.get(1));
+		markPathOne(topThreePaths.get(0));
 	}
 	
-	public void markPathOne(Path path) {
+	private void markPathOne(Path path) {
 		PopulationMaker pm = new PopulationMaker(graph);
         Collection<Edge> edges = path.getEdgeSet();
 
         for(Edge edge : edges){
             (pm.getEquivalentEdge(edge.getNode0(), edge.getNode1())).setAttribute("ui.class", "marked");
-//            sleep();
+        }
+    }
+	private void markPathTwo(Path path) {
+		PopulationMaker pm = new PopulationMaker(graph);
+        Collection<Edge> edges = path.getEdgeSet();
+
+        for(Edge edge : edges){
+            (pm.getEquivalentEdge(edge.getNode0(), edge.getNode1())).setAttribute("ui.class", "markedTwo");
+        }
+    }
+	private void markPathThree(Path path) {
+		PopulationMaker pm = new PopulationMaker(graph);
+        Collection<Edge> edges = path.getEdgeSet();
+
+        for(Edge edge : edges){
+            (pm.getEquivalentEdge(edge.getNode0(), edge.getNode1())).setAttribute("ui.class", "markedThree");
         }
     }
 	
-	public void cleanGraph (){
+	private void cleanGraph (){
         Collection<Edge> edges = graph.getEdgeSet();
 
         for(Edge edge : edges)
@@ -97,9 +124,12 @@ public class PopulationViewer {
                     "       text-alignment: center;" +
                     "}" +
                     "edge.marked {" +
+                    "       fill-color: green;" +
+                    "}" +
+                    "edge.markedTwo {" +
                     "       fill-color: red;" +
                     "}" +
-                    "edge.unMarked {" +
-                    "       fill-color: black;" +
+                    "edge.markedThree {" +
+                    "       fill-color: blue;" +
                     "}";
 }

@@ -4,15 +4,26 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.Path;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.TreeMap;
 
 public class ExecuteTSP {
 
-    static int numberOfChromosomes =500;
-    final static int numberOfGenerations = 5000;
-    final static int fitnessPercentage = 50;
+    static int numberOfChromosomes;
+    static int numberOfGenerations ;
+    static int fitnessPercentage;
 
     public static void main(String args[]) {
+    	Scanner userInputScanner = new Scanner(System.in);
+    	System.out.println("Number Of Chromosomes: ");
+        numberOfChromosomes = userInputScanner.nextInt();
+        
+    	System.out.println("Number Of Generations: ");
+        numberOfGenerations = userInputScanner.nextInt();
+        
+        System.out.println("Fitness Percentage: ");
+        fitnessPercentage = userInputScanner.nextInt();
+         
     	executeGA();
     }
 
@@ -41,7 +52,6 @@ public class ExecuteTSP {
         }
         
         population = crossoverAgent.cleanWorkspace(population);
-
 //        populationMaker.showPopulation(population);
 
 

@@ -35,6 +35,22 @@ public class MapMaker{
         graph.addNode("H");
         graph.addNode("I");
         graph.addNode("J");
+        graph.addNode("K");
+        graph.addNode("L");
+        graph.addNode("M");
+        graph.addNode("N");
+        graph.addNode("O");
+        graph.addNode("P");
+        graph.addNode("Q");
+        graph.addNode("R");
+        graph.addNode("S");
+        graph.addNode("T");
+        graph.addNode("U");
+        graph.addNode("V");
+        graph.addNode("W");
+        graph.addNode("X");
+        graph.addNode("Y");
+        graph.addNode("Z");
 
 
         addAllEdgeInstances(graph, isDirected);

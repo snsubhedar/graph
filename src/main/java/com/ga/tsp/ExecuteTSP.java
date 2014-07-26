@@ -41,18 +41,18 @@ public class ExecuteTSP {
         for (Integer i = numberOfGenerations; i>0; i--){
             population = crossoverAgent.cleanWorkspace(population);
             viewer.showTopPaths(population);
-            System.out.println("Generation:" + i.toString() + 
-            		" Weight=" + population.firstKey().toString() + 
+            System.out.println("Generation:" + (numberOfGenerations-i+1) +
+            		" Weight = " + population.firstKey().intValue() + 
             		" Path:" + population.firstEntry().getValue().get(population.firstEntry().getValue().size()-1).toString());
             if (i < numberOfGenerations && i%5 == 0){
             	mutationAgent.reverseSequenceMutation(population);
             }
             crossoverAgent.crossover(population);
-            sleep();
         }
         
         population = crossoverAgent.cleanWorkspace(population);
-//        populationMaker.showPopulation(population);
+        viewer.showTopPaths(population);
+//        viewer.showPopulation(population);
 
 
     }

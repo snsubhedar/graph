@@ -66,7 +66,7 @@ public class GraphExplore {
 
         for (Edge edge : graph.getEdgeSet())
         {
-            edge.addAttribute("ui.label", edge.getAttribute("distance"));
+            edge.addAttribute("ui.label", edge.getAttribute("weight"));
         }
         Viewer viewer = graph.display();
 
@@ -136,15 +136,21 @@ public class GraphExplore {
             "edge {" +
                     "       shape: line;" +
                     "       size: 1px, 0px;" +
-                    "       fill-color: yellow;" +
-                    "       text-mode: normal;" +
-                    "       text-alignment: center;" +
+                    "       fill-color: blue;" +
+                 //   "       text-mode: normal;" +
+                    "       text-alignment: above;" +
+                    "       text-background-mode:none;" +
                     "}" +
                     "edge.marked {" +
                     "       fill-color: red;" +
+                    "       size: 3px, 0px;" +
+                    "       text-alignment: right;" +
+                    "       " +
                     "}" +
                     "edge.unMarked {" +
                     "       fill-color: yellow;" +
+                    "       size: 1px, 0px;" +
+                    "       text-alignment: right;" +
                     "}";
 
 }

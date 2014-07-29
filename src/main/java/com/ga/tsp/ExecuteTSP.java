@@ -48,6 +48,7 @@ public class ExecuteTSP {
             	mutationAgent.reverseSequenceMutation(population);
             }
             crossoverAgent.crossover(population);
+            sleep();
         }
         
         population = crossoverAgent.cleanWorkspace(population);

@@ -17,13 +17,11 @@ public class PopulationViewer {
 	
 	public PopulationViewer(Graph inputMap){
 		graph = inputMap;
+        cleanGraph(true);  // clean and add default label attributes
 	}
 	
 	public void showTopPaths (TreeMap <Double, ArrayList <Path>> population){
-		cleanGraph();
-        for (Node node : graph) {
-            node.addAttribute("ui.label", node.getId());
-        }
+		cleanGraph(false);  //just clean the edge styles
 
 		graph.addAttribute("ui.stylesheet" , styleSheet + " " + labelStyleSheet );
 		
@@ -38,9 +36,10 @@ public class PopulationViewer {
             }
 
         }
-        
-        markPathThree(topThreePaths.get(2));
-        markPathTwo(topThreePaths.get(1));
+        //SS: throws a NULL pointer exception when fitness percentage of population is less than 3
+        //e.g. Population: 10, fitness percentage 20 yields only 2 paths in workspace
+        //markPathThree(topThreePaths.get(2));
+        //markPathTwo(topThreePaths.get(1));
 		markPathOne(topThreePaths.get(0));
 	}
 	
@@ -69,12 +68,24 @@ public class PopulationViewer {
         }
     }
 	
-	private void cleanGraph (){
+	private void cleanGraph (Boolean addLabel){
         Collection<Edge> edges = graph.getEdgeSet();
 
         for(Edge edge : edges)
         {
+            if(addLabel)
+            {
+                edge.addAttribute("ui.label", edge.getAttribute("weight"));
+                edge.addAttribute("layout.weight", (Double) edge.getAttribute("weight") * 10);
+            }
             edge.setAttribute("ui.class", "unMarked");
+        }
+
+        if(addLabel)
+        {
+            for (Node node : graph) {
+                node.addAttribute("ui.label", node.getId());
+            }
         }
 	}
 	
@@ -116,20 +127,28 @@ public class PopulationViewer {
                     "}";
 
     protected String labelStyleSheet =
-            "edge {" +
+            "edge   {" +
                     "       shape: line;" +
                     "       size: 1px, 0px;" +
                     "       fill-color: black;" +
                     "       text-mode: normal;" +
-                    "       text-alignment: center;" +
+                    "       text-style: bold;" +
+                    "       text-alignment: along;" +
                     "}" +
                     "edge.marked {" +
                     "       fill-color: green;" +
+                    "       size: 3px, 0px;" +
                     "}" +
                     "edge.markedTwo {" +
                     "       fill-color: red;" +
+                    "       size: 3px, 0px;" +
                     "}" +
                     "edge.markedThree {" +
                     "       fill-color: blue;" +
+                    "       size: 3px, 0px;" +
+                    "}" +
+                    "edge.unMarked {" +
+                    "       fill-color: black;" +
+                    "       size: 1px, 0px;" +
                     "}";
 }

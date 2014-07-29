@@ -23,8 +23,6 @@ public class MapMaker{
         graph.setStrict(false);
         graph.setAutoCreate(true);
 
-        graph.addAttribute("ui.stylesheet");
-
         graph.addNode("A");
         graph.addNode("B");
         graph.addNode("C");
@@ -95,35 +93,9 @@ public class MapMaker{
         Random r = new Random();
         for (Edge edge : graph.getEdgeSet()){
             Integer randomInt = r.nextInt(100);
-            double randomDouble = randomInt.doubleValue();
+            Double randomDouble = randomInt.doubleValue();
             edge.addAttribute(typeOfAttributeToAdd, randomDouble );
         }
     }
-
-    protected String styleSheet =
-            "node {" +
-                    "       fill-color: black;" +
-                    "}" +
-                    "node.marked {" +
-                    "       fill-color: red;" +
-                    "}";
-
-    protected String labelStyleSheet =
-            "edge {" +
-                    "       shape: line;" +
-                    "       size: 1px, 0px;" +
-                    "       fill-color: yellow;" +
-                    "       text-mode: normal;" +
-                    "       text-alignment: center;" +
-                    "}" +
-                    "edge.marked {" +
-                    "       fill-color: red;" +
-                    "}" +
-                    "edge.unMarked {" +
-                    "       fill-color: yellow;" +
-                    "}";
-
-
-
 }
 

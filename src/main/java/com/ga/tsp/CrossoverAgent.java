@@ -15,11 +15,13 @@ public class CrossoverAgent {
     static Graph inputMap;
     int chromosomeCount;
     int cutoffPercentage;
+    int typeOfCrossoverPoint;
 
-    public CrossoverAgent(Graph map, int organismCount, int fitnessPercentage){
+    public CrossoverAgent(Graph map, int organismCount, int fitnessPercentage, int crossoverPointType){
         inputMap = map;
         chromosomeCount = organismCount; 
         cutoffPercentage = fitnessPercentage;
+        typeOfCrossoverPoint = crossoverPointType;
         
         
     }
@@ -72,7 +74,7 @@ public class CrossoverAgent {
 
 	}
 
-    public TreeMap <Double, ArrayList <Path>> cleanWorkspace (TreeMap <Double, ArrayList <Path>> populationMap){
+    public TreeMap <Double, ArrayList <Path>> cleanWorkspaceWithPercentage (TreeMap <Double, ArrayList <Path>> populationMap){
         final int numberOfFitChromosomeCount = chromosomeCount/(100/cutoffPercentage);
         TreeMap <Double, ArrayList <Path>> mapWorkspace = new TreeMap <Double, ArrayList <Path>>();
 
@@ -84,7 +86,7 @@ public class CrossoverAgent {
 
              if ( (numberOfPathsAdded + ((ArrayList <Path>)(pairs.getValue())).size() ) <= numberOfFitChromosomeCount){
                  mapWorkspace.put((Double)pairs.getKey(), (ArrayList <Path>) pairs.getValue());
-                 numberOfPathsAdded++;
+                 numberOfPathsAdded = numberOfPathsAdded + ((ArrayList <Path>) pairs.getValue()).size();
              }
 
          }
@@ -94,8 +96,55 @@ public class CrossoverAgent {
 
     }
     
+    public TreeMap <Double, ArrayList <Path>> inverseLinearCoefficientSelection (TreeMap <Double, ArrayList <Path>> populationMap){
+    	/**In roulette wheel selection, the individuals are given a probability Pi of being selected (9) that is directly proportionate to their fitness.
+		Thus, individuals who have low values of the fitness function may have a high
+		chance of being selected among the individuals to cross.
+		for all members of population sum += fitness of this individual end for all*/
+    	
+    	
+        final int numberOfFitChromosomeCount = chromosomeCount/(100/cutoffPercentage);
+        Random random = new Random();
+        TreeMap <Double, ArrayList <Path>> mapWorkspace = new TreeMap <Double, ArrayList <Path>>();
+
+        int numberOfPathsAdded = 0;
+        
+        boolean findLinearCoefficient = true;
+        int inverseLinearCoefficient = 0;
+
+         Iterator<Entry<Double, ArrayList<Path>>> it = populationMap.entrySet().iterator();
+         while (it.hasNext()) {
+             Map.Entry pairs = (Map.Entry)it.next();
+             if ( (numberOfPathsAdded + ((ArrayList <Path>)(pairs.getValue())).size() ) <= numberOfFitChromosomeCount){
+            	 int weight = ((Double) pairs.getKey()).intValue();
+            	 
+            	 if (findLinearCoefficient){
+            		 inverseLinearCoefficient = weight * (100/(cutoffPercentage));
+            		 findLinearCoefficient = false;
+            	 }
+            	 
+            	 Integer roulette = (random.nextInt(weight));
+            	 double selectionParameter = roulette.doubleValue() * 1.5;
+            	 if (selectionParameter < inverseLinearCoefficient){
+            		 mapWorkspace.put((Double)pairs.getKey(), (ArrayList <Path>) pairs.getValue());
+            	 }
+            	 
+            	 numberOfPathsAdded = numberOfPathsAdded + ((ArrayList <Path>) pairs.getValue()).size();
+             }
+
+         }
+         
+         return mapWorkspace;
+    }
+    
     private List <Path> crossoverPaths (Path pathOne, Path pathTwo){
-    	int crossoverPoint = getCrossoverPoint(pathOne);
+    	int crossoverPoint = 0;
+    	if (typeOfCrossoverPoint == 1){
+    		crossoverPoint = getRandomCrossoverPoint(pathOne);
+    	}else {
+    		crossoverPoint = getMiddleCrossoverPoint(pathOne);
+    	}
+    	
     	Pair <Path, Path> pathOneSplit = splitPath(pathOne, crossoverPoint);
     	Pair <Path, Path> pathTwoSplit = splitPath (pathTwo, crossoverPoint);
     	
@@ -162,7 +211,7 @@ public class CrossoverAgent {
     }
 
 
-    private int getCrossoverPoint(Path path){ // returns random crossover point in the middle 50% of the path 
+    private int getRandomCrossoverPoint(Path path){ // returns random crossover point in the middle 50% of the path 
         Random r= new Random();
         int pathSize = path.size();
         int lowerBound = pathSize/3; 			// lower 25%  
@@ -172,6 +221,10 @@ public class CrossoverAgent {
         
         return crossoverPoint;
   
+    }
+    
+    private int getMiddleCrossoverPoint (Path path){
+    	return path.size()/2;
     }
     
     private Node pickRandomNodeNotInPath (Path path, Path pathTwo, List <Node> nodesToPickFrom){

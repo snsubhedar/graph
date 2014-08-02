@@ -18,29 +18,15 @@ public class PopulationViewer {
 	public PopulationViewer(Graph inputMap){
 		graph = inputMap;
         cleanGraph(true);  // clean and add default label attributes
+        graph.addAttribute("ui.stylesheet" , styleSheet + " " + labelStyleSheet );
 	}
 	
-	public void showTopPaths (TreeMap <Double, ArrayList <Path>> population){
+	public void showTopPath (TreeMap <Double, ArrayList <Path>> population){
 		cleanGraph(false);  //just clean the edge styles
-
-		graph.addAttribute("ui.stylesheet" , styleSheet + " " + labelStyleSheet );
 		
-		List <Path> topThreePaths = new ArrayList <Path>();
 		
-		Iterator<Entry<Double, ArrayList<Path>>> it = population.entrySet().iterator();
-        while (it.hasNext() && topThreePaths.size() < 3) {
-            Map.Entry pairs = (Map.Entry)it.next();
-            ArrayList <Path> topArrayList = (ArrayList <Path>)pairs.getValue();
-            for (Path path :topArrayList){
-            	topThreePaths.add(path);
-            }
-
-        }
-        //SS: throws a NULL pointer exception when fitness percentage of population is less than 3
-        //e.g. Population: 10, fitness percentage 20 yields only 2 paths in workspace
-        //markPathThree(topThreePaths.get(2));
-        //markPathTwo(topThreePaths.get(1));
-		markPathOne(topThreePaths.get(0));
+		Path topPath = population.firstEntry().getValue().get(population.firstEntry().getValue().size()-1);
+		markPathOne(topPath);
 	}
 	
 	private void markPathOne(Path path) {
@@ -49,22 +35,6 @@ public class PopulationViewer {
 
         for(Edge edge : edges){
             (pm.getEquivalentEdge(edge.getNode0(), edge.getNode1())).setAttribute("ui.class", "marked");
-        }
-    }
-	private void markPathTwo(Path path) {
-		PopulationMaker pm = new PopulationMaker(graph);
-        Collection<Edge> edges = path.getEdgeSet();
-
-        for(Edge edge : edges){
-            (pm.getEquivalentEdge(edge.getNode0(), edge.getNode1())).setAttribute("ui.class", "markedTwo");
-        }
-    }
-	private void markPathThree(Path path) {
-		PopulationMaker pm = new PopulationMaker(graph);
-        Collection<Edge> edges = path.getEdgeSet();
-
-        for(Edge edge : edges){
-            (pm.getEquivalentEdge(edge.getNode0(), edge.getNode1())).setAttribute("ui.class", "markedThree");
         }
     }
 	
@@ -76,7 +46,7 @@ public class PopulationViewer {
             if(addLabel)
             {
                 edge.addAttribute("ui.label", edge.getAttribute("weight"));
-                edge.addAttribute("layout.weight", (Double) edge.getAttribute("weight") * 10);
+                edge.addAttribute("layout.weight", (Double) edge.getAttribute("weight") * 1000);
             }
             edge.setAttribute("ui.class", "unMarked");
         }
@@ -136,15 +106,7 @@ public class PopulationViewer {
                     "       text-alignment: along;" +
                     "}" +
                     "edge.marked {" +
-                    "       fill-color: green;" +
-                    "       size: 3px, 0px;" +
-                    "}" +
-                    "edge.markedTwo {" +
                     "       fill-color: red;" +
-                    "       size: 3px, 0px;" +
-                    "}" +
-                    "edge.markedThree {" +
-                    "       fill-color: blue;" +
                     "       size: 3px, 0px;" +
                     "}" +
                     "edge.unMarked {" +

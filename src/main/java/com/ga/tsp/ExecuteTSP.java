@@ -6,7 +6,10 @@ import org.graphstream.graph.Path;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.TreeMap;
-
+/**
+ * Created and mantained by Animesh.
+ * <animesh . koratana @ gmail . com>
+ */
 public class ExecuteTSP {
 
     static int numberOfChromosomes;
@@ -15,9 +18,20 @@ public class ExecuteTSP {
     static int typeOfSelection;
     static int typeOfMutation;
     static int crossoverPoint;
+    static int typeOfMap;
 
     public static void main(String args[]) {
     	Scanner userInputScanner = new Scanner(System.in);
+    	
+        System.out.println("Type of Input Map:");
+        System.out.println("1: Preset Large Map (26 verticies)	  2: Preset Small Map (7 verticies)		3: Random Large Map (52 nodes)");
+        while (typeOfMap != 1 && typeOfMap != 2 && typeOfMap != 3){
+        	typeOfMap = userInputScanner.nextInt();
+        	if (typeOfMap != 1 && typeOfMap != 2 && typeOfMap != 3){
+        		System.out.println("I'm sorry I didn't get that");
+        	}
+        }
+        
     	System.out.println("Number Of Chromosomes: ");
         numberOfChromosomes = userInputScanner.nextInt();
         
@@ -46,13 +60,14 @@ public class ExecuteTSP {
         }
         
         System.out.println("Crossover Point:");
-        System.out.println("1: Random (within middle 50%	  2: Center");
+        System.out.println("1: Random (within middle 50%)	  2: Center");
         while (crossoverPoint != 1 && crossoverPoint != 2){
         	crossoverPoint = userInputScanner.nextInt();
         	if (crossoverPoint != 1 && crossoverPoint != 2 ){
         		System.out.println("I'm sorry I didn't get that");
         	}
         }
+        
 
     	executeGA();
     	
@@ -61,7 +76,14 @@ public class ExecuteTSP {
  
     private static void executeGA (){
         MapMaker mapMaker = new MapMaker();
-        final Graph inputMap = mapMaker.makePresetMap();
+        final Graph inputMap;
+        if (typeOfMap == 1){
+        	inputMap = mapMaker.makePresetLargeMap();
+        }else if (typeOfMap == 2){
+        	inputMap = mapMaker.makePresetSmallMap();
+        }else{
+        	inputMap = mapMaker.makeRandomLargeMap();
+        }
         PopulationMaker populationMaker = new PopulationMaker(inputMap);
         TreeMap <Double, ArrayList <Path>> population = populationMaker.generate(numberOfChromosomes);
         CrossoverAgent crossoverAgent = new CrossoverAgent(inputMap, numberOfChromosomes, fitnessPercentage, crossoverPoint);
@@ -75,8 +97,9 @@ public class ExecuteTSP {
         	}else {
         		population = crossoverAgent.inverseLinearCoefficientSelection(population);
         	}
+            	showCurrentStats (population, viewer, numberOfGenerations-i+1);
+
         	
-        	showCurrentStats (population, viewer, numberOfGenerations-i+1);
         	
             if (i < numberOfGenerations && i%5 == 0){
             	if (typeOfMutation == 1){
@@ -90,7 +113,9 @@ public class ExecuteTSP {
             sleep();
         }
         
+        
         population = crossoverAgent.cleanWorkspaceWithPercentage(population);
+
         viewer.showTopPath(population);
 //        viewer.showPopulation(population);
 

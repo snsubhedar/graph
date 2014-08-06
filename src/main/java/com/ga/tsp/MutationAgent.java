@@ -8,7 +8,10 @@ import org.graphstream.graph.Node;
 import org.graphstream.graph.Path;
 
 import java.util.*;
-
+/**
+ * Created and mantained by Animesh.
+ * <animesh . koratana @ gmail . com>
+ */
 public class MutationAgent {
 	
 	Graph inputMap;

@@ -10,7 +10,10 @@ import scala.util.Random;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
-
+/**
+ * Created and mantained by Animesh.
+ * <animesh . koratana @ gmail . com>
+ */
 public class PopulationMaker {
 
     static Graph inputMap;

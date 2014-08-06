@@ -9,7 +9,8 @@ import java.util.*;
 import java.util.Map.Entry;
 
 /**
- * Created by Animesh on 7/25/14.
+ * Created and mantained by Animesh.
+ * <animesh . koratana @ gmail . com>
  */
 public class PopulationViewer {
 	

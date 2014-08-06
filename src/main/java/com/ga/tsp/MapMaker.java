@@ -8,7 +8,10 @@ import org.graphstream.graph.implementations.SingleGraph;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Random;
-
+/**
+ * Created and mantained by Animesh.
+ * <animesh . koratana @ gmail . com>
+ */
 public class MapMaker{
 
 	public static void main(String args[]) {
@@ -16,7 +19,7 @@ public class MapMaker{
     }
 
 
-    public Graph makePresetMap() {
+    public Graph makePresetLargeMap() {
     	Graph graph = new SingleGraph ("inputMap");
         boolean isDirected = false;
 
@@ -54,7 +57,6 @@ public class MapMaker{
 
         addAllEdgeInstances(graph, isDirected);
 
-//        addRandomWeights(graph, "weight");
         graph.getEdge("AB").setAttribute("weight" , 37.0);
         graph.getEdge("AC").setAttribute("weight" , 87.0);
         graph.getEdge("AD").setAttribute("weight" , 32.0);
@@ -388,7 +390,56 @@ public class MapMaker{
         return graph;
     }
     
-    public Graph makeRandomMap(){
+    public Graph makePresetSmallMap(){
+    	Graph graph = new SingleGraph ("inputMap");
+        boolean isDirected = false;
+
+        graph.setStrict(false);
+        graph.setAutoCreate(true);
+
+        graph.addNode("A");
+        graph.addNode("B");
+        graph.addNode("C");
+        graph.addNode("D");
+        graph.addNode("E");
+        graph.addNode("F");
+        graph.addNode("G");
+
+        addAllEdgeInstances(graph, isDirected);
+        
+        graph.getEdge("AB").setAttribute("weight" , 37.0);
+        graph.getEdge("AC").setAttribute("weight" , 87.0);
+        graph.getEdge("AD").setAttribute("weight" , 32.0);
+        graph.getEdge("AE").setAttribute("weight" , 48.0);
+        graph.getEdge("AF").setAttribute("weight" , 46.0);
+        graph.getEdge("AG").setAttribute("weight" , 72.0);
+        graph.getEdge("BC").setAttribute("weight" , 92.0);
+        graph.getEdge("BD").setAttribute("weight" , 47.0);
+        graph.getEdge("BE").setAttribute("weight" , 43.0);
+        graph.getEdge("BF").setAttribute("weight" , 62.0);
+        graph.getEdge("BG").setAttribute("weight" , 64.0);
+        graph.getEdge("CD").setAttribute("weight" , 58.0);
+        graph.getEdge("CE").setAttribute("weight" , 24.0);
+        graph.getEdge("CF").setAttribute("weight" , 40.0);
+        graph.getEdge("CG").setAttribute("weight" , 61.0);
+        graph.getEdge("DE").setAttribute("weight" , 63.0);
+        graph.getEdge("DF").setAttribute("weight" , 53.0);
+        graph.getEdge("DG").setAttribute("weight" , 42.0);
+        graph.getEdge("EF").setAttribute("weight" , 33.0);
+        graph.getEdge("EG").setAttribute("weight" , 38.0);
+        graph.getEdge("FG").setAttribute("weight" , 30.0);
+
+        addRandomWeights(graph, "weight");
+        
+        for (Edge edge : graph.getEdgeSet())
+        {
+            edge.addAttribute("ui.label", edge.getAttribute("distance"));
+        }
+        return graph;
+    }
+    
+    
+    public Graph makeRandomLargeMap(){
     	Graph graph = new SingleGraph ("inputMap");
         boolean isDirected = false;
 
@@ -421,6 +472,32 @@ public class MapMaker{
         graph.addNode("X");
         graph.addNode("Y");
         graph.addNode("Z");
+        graph.addNode("a");
+        graph.addNode("b");
+        graph.addNode("c");
+        graph.addNode("d");
+        graph.addNode("e");
+        graph.addNode("f");
+        graph.addNode("g");
+        graph.addNode("h");
+        graph.addNode("i");
+        graph.addNode("j");
+        graph.addNode("k");
+        graph.addNode("l");
+        graph.addNode("m");
+        graph.addNode("n");
+        graph.addNode("o");
+        graph.addNode("p");
+        graph.addNode("q");
+        graph.addNode("r");
+        graph.addNode("s");
+        graph.addNode("t");
+        graph.addNode("u");
+        graph.addNode("v");
+        graph.addNode("w");
+        graph.addNode("x");
+        graph.addNode("y");
+        graph.addNode("z");
         
 
 
